@@ -69,8 +69,9 @@ Une mesure de distance _d_ doit satisfaire les propriétés suivantes pour tout 
 
 La distance $\lambda_q$ entre deux vecteurs dans $\mathbb{R}^p$ est définie par:  
 $$
-||_x_i - _x__j||_q = (\sum_{k = 1}^p |x_ik - x_jk|^q)^\frac{1}{q}
+||x_i - x_j||_q = \left( \sum_{k=1}^p |x_{ik} - x_{jk}|^q \right)^{\frac{1}{q}}
 $$
+
 
 
  
