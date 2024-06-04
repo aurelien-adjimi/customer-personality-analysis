@@ -67,11 +67,14 @@ Une mesure de distance _d_ doit satisfaire les propriétés suivantes pour tout 
 - _d_(_i_, _j_) = _d_(_j_, _i_);  
 - _d_(_i_, _k_) $\leq$ _d_(_i_, _j_) + _d_(_j_, _k_).  
 
-La distance $\lambda _q_$ entre deux vecteurs dans $\mathbb{R}^p$ est définie par:  
-||_x_$_i$ - _x_$_j$||$_q$ = ($\sum_{k = 1}^p$ |x$_ik$ - x$_jk$|^q)^$\frac{1}{q}$.  
+La distance $$\lambda_q$$ entre deux vecteurs dans $\mathbb{R}^p$ est définie par:  
+$$
+||x_i - x_j||_q = \left( \sum_{k = 1}^p |x_{ik} - x_{jk}|^q \right)^{\frac{1}{q}}
+$$
+ 
 La distance euclidienne correspond au cas où q = 2.  
 
-La distance $\lambda _q_$ n'est pas invariante à un changement d'échelle.Ce qui a des conséquences majeures pour la pratique.  
+La distance $$\lambda_q$$ n'est pas invariante à un changement d'échelle.Ce qui a des conséquences majeures pour la pratique.  
 Par exemple, considérons le jeu de données suivants:  
 | Poids en grammes | Taille en centimètres |
 | :- | -: |
@@ -88,7 +91,10 @@ _d_(1, 2) = 51.0, _d_(1,3) = 36.1, _d_(2,3) = 80.6
 On peut donc se demander si le premier objet est plus près du deuxième objet ou du troisième objet ?  
 Cet exemple explique pourquoi dans plusieurs situations on préfère travailler avec la distance standardisée entre les variables,  
 
-_d²_(x$_i$, x$_j$) = $\sum{k=1}^_p$($\frac{x_ik - µ_k}{s_k} - \frac{x_jk - µ_k}{s_k}$)² = $\sum{k=1}^p$($\frac{x_ik - x_jk}{s_k}$)²  
+$$
+d^2(x_i, x_j) = \sum_{k=1}^p \left(\frac{x_{ik} - \mu_k}{s_k} - \frac{x_{jk} - \mu_k}{s_k}\right)^2 = \sum_{k=1}^p \left(\frac{x_{ik} - x_{jk}}{s_k}\right)^2
+$$
+
 
 Où  
 
