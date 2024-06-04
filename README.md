@@ -73,11 +73,6 @@ $$
 ||x_i - x_j||_q = \left( \sum_{k=1}^p |x_{ik} - x_{jk}|^q \right)^{\frac{1}{q}}
 $$
 
-$ ||x_i - x_j||_q = \left( \sum_{k=1}^p |x_{ik} - x_{jk}|^q \right)^{\frac{1}{q}} $
-
-
-
-
  
 La distance euclidienne correspond au cas où q = 2.  
 
@@ -108,9 +103,123 @@ Où
 $µ_k$ = moyenne de la variable k; $s_k$ = écart type de la variable k.  
 
 On trouve les distances suivantes, peu importe l'unité de mesure utilisée:  
-_d_(1, 2) = 16, _d_(1, 3) = 42, _d_(2, 3) = 26.
+_d_(1, 2) = 16, _d_(1, 3) = 42, _d_(2, 3) = 26.  
 
-### Algo 1  
+**Indices de similarité**  
+Un indice de similarité _s_ entre des objets doit satisfaire les propriétés suivantes pour tout _i_, _j_, _k_ $\in$ {1, . . . , _n_}:  
+- 0 $\leq$ _s_(_i_, _j_) $\leq$ 1;  
+- _s_(_i_, _j_) = _s_(_j_, _i_);  
+- _s_(_i_, _i_) = 1.  
+
+Une distance peut se transformer en similarité en posant  
+_s_(_i_, _j_) = $\frac{1}{1 + d(_i_, _j_)}$.  
+
+La relation inverse n'est pas vraie en raison de l'inégalité du triangle. On peut aussi définir la dissemblance entre deux objets, soit:  
+
+_d_*(_i_, _j_) = 1 - _s_(_i_, _j_).  
+
+L'indice de similarité dépend du ou des types de variables utilisées dans l'analyse. Les principaux types de variables avec lesquels on doit composer sont les suivants:  
+- *Variables numériques*  
+    Il s’agit de variables dont la valeur numérique mesure quelque chose de quantifiable et dont la différence entre les valeurs reflète la différence entre les objets. On peut ainsi parler du revenu en dollars, de la masse, de l’âge, etc.
+    Pour ce type de variable, on utilise généralement la distance euclidienne standardisée.  
+
+- *Variables nominales*  
+    Les variables nominales (ou qualitative) peuvent être binaires (deux modalités) ou polytomique (plus de deux modalités). Dans les deux cas, elles peuvent être symétriques ou asymétriques.
+
+    Les variables nominales symétriques sont des variables qualitatives (donc qui ne sont ni numériques ni ordinales) dont toutes les modalités sont aussi informatives l’une que l’autre. On peut penser par exemple au sexe (homme ou femme), à laquelle de l’une de 4 sections d’un cours des étudiants appartiennent, etc.
+
+    Les variables nominales asymétriques sont des variables qualitatives dont les modalités ne contiennent pas toutes le même niveau d’information. Ceci se produit habituellement lorsque l’une des modalités est très fréquente, un peu la modalité par défaut, mais que les autres ne le sont pas. Par exemple si une variable indique si un individu est daltonien ou pas, deux individus daltoniens ont quelque chose en commun, mais deux individus non daltoniens n’ont pas nécessairement quelque chose en commun. Un autre exemple pourrait être si une transaction est frauduleuse ou pas dans une analyse où une très faible proportion des transactions sont frauduleuses.  
+
+- *Variables nominales binaires*  
+    Pour des vecteurs de variables binaires symétriques, on utilise la proportion d’accords (matching coefficient) dans les éléments des vecteurs. On commence par coder l’une modalité à 0 et l’autre à 1. Si on mesure _p_ variables binaires pour chacun de deux individus _i_ et _j_, on compte le nombre de variables pour lesquelles ces deux individus ont la même valeur pour une même variable, soit:  
+    _m_ = $\sum_{k=1}^p I(x_ik = x_jk)$ et la similarité est définie par _s_(_i_, _j_) = _m_ / _p_. Par exemple supposons que deux individus remplissent un questionnaire de 10 questions et que la valeur 1 représente une réponse _OUI_ et 0 représent une réponse _NON_  
+
+    | Individu | Q1 | Q2 | Q3 | Q4 | Q5 | Q6 | Q7 | Q8 | Q9 | Q10 |
+    | :- | :-: | :-: | :-: |:-: | :-: | :-: | :-: | :-: | -: |
+    | i | 1 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 0 |
+    | j | 1 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 |  
+
+    Alors si la similarité entre $x_i$ et $x_j$ ici serait _s_(_i_, _j_) = 8/10 = 0.8, puisqu'ils ont donné la même réponse pour 8 des 10 questions.  
+    Pour des vecteurs de variables binaires asymétriques, on assigne la modalité 1 à la valeur la plus rare (ou la plus importante) et la vameur 0 à l'autre modalité. Puis on peut utiliser l'indice de Jaccard défini par le nombre de variables pour lesquelles _i_ et _j_ prennent simultanément la valeur 1 sur le nombre de variables pour lesquelles au moins l'un de _i_ ou de _j_ n'a pas la valeur 0 soit:  
+    _J_(_i_, _j_) = $\frac{\sum_{k=1}^p x_ik x_jk}{\sum_{k=1}^p \{1 - (1 - x_ik)(1 - x_jk)}}$.  
+
+    Dans l'exemple ci-dessus on aurait donc _J_(_i_, _j_) = 1/3 = 0.33 puisque les 7 questions pour lesquelles les deux individus donnent simultanément la valeur 0 ne sont pas comptées ni au numérateur, ni au dénominateur; pour les 3 questions qui comptent (Q1, Q6 et Q7), ils sont en accord 1 fois, d’où le 1/3.  
+
+- *Variables nominales polytomiques*  
+    Si une variable est composée de _M_ > 2 modalités, on peut la coder en utilisant _M_ - 1 variables binaires. Par exemple si les réponses possibles à une question sont Oui, Non, Je Ne Sais Pas, on pourrait coder les trois réponses possible ainsi:  
+    | Modalités | Individu 1 | Individu 2 |
+    | :- | :-: | -: |
+    | Oui | 1 | 0 |
+    | Non | 0 | 1 |
+    | Je Ne Sais Pas | 0 | 0 |  
+
+    On peut en suite calculer la similarité entre _i_ et _j_ en utilisant les méthodes utilisées pour les variables binaires.  
+    Si on a _q_ variables binaires ou polytomiques de même nature, il est d'usage de calculer la similarité séparemment pour chacune des _q_ variables puis de faire la moyenne des _q_ similarités.  
+    Par exemple, supposons que nos deux individus _i_ et _j_ ont répondus à deux questions pour lesquelles ils avaient trois choix: _i_ répond _b_ aux deux questions alors que _j_ répond _b_ à la première et _c_ à la deuxième.  Supposons que les choix sont codés selon le tableau ci-dessous:  
+    | Individu | Q1a | Q1b | Q1c | Q2a | Q2b | Q2c |
+    | :- | :-: | :-: | :-: | :-: | :-: | -: |
+    | i | 0 | 1 | 0 | 0 | 1 | 0 |
+    | j | 0 | 1 | 0 | 0 | 0 | 1 |  
+
+    Calculons les similarités pour chaque question en supposant les modalités aussi importantes les unes que les autres. On aura:   _s_$_Q1$(_i_, _j_) = 2/2 et _s_$_Q2$(_i_, _j_) = 1/2. En prenant la moyenne des deux similarités, on obtient  _s_(_i_, _j_) = {_s_$_Q1$(_i_, _j_) + _s_$_Q2$(_i_, _j_)} / 2 = 3/4.  
+
+    Maintenant supposons que les variables correspondant à la question 1 sont symétriques et celles correspondant à la question 2 sont asymétriques. La similarité _s_$_Q1$(_i_, _j_) = 2/2 demeure inchangée puisqu'on conserve la même règle. Pour la deuxième question, on prend maintenant l'indice de Jaccard et donc _s_$_Q2$(_i_, _j_) = 0/1 car Q2a ne contribue pas au calcul. On obtient donc _s_(_i_, _j_) = {2/2 + 0/1} /2 = 1/2.  
+
+- *Variables ordinales*  
+    Il s’agit de variables qui ne donnent pas une quantification précise d’un phénomène, mais dont les modalités peuvent être naturellement ordonnées. On peut penser par exemple à un revenu faible, moyen ou élevé, ou à un niveau d’accord entre tout à fait en désaccord, en désaccord, pas d’avis, d’accord, tout à fait d’accord.
+
+    On assigne habituellement un score numérique à chaque modalité de la variable ordinale, ensuite on la traite comme une variable numérique.
+
+    Il n’y a pas de règle sur les scores numériques à donner, à part qu’ils doivent être positifs et refléter l’ordre des modalités. Par exemple pour une question sur le revenu, on pourrait accorder respectivement des scores de 1, 2, 3 pour des revenus faible, moyen, élevé, ou on pourrait aussi accorder 15000, 50000, 150000; c’est un exercice de jugement et il n’existe pas de règle mathématique claire.
+
+*Observation constituée de plusieurs types de variables*  
+    Que doit-on faire si chaque observation est constituée de variables de plusieurs types, par exemple si pour chacun des  
+    n individus nous mesurons l’âge (numérique), le sexe (nominale symétrique), s’il est porteur d’une mutation génétique rare (nominale asymétrique) et son niveau d’accord avec une certaine politique (ordinale)? Il existe quelques façons de procéder, mais la plus commune semble être de mesurer la similarité de Gower.
+
+    On doit tout d’abord recoder toute variable nominale sous forme de variables binaires et toute variable ordinale sous forme de variable numérique et supposons qu’une fois cette opération effectuée, on obtient p variables par individu. La similarité de Gower entre _x_$_i$ et _x_$_j$ est définie ainsi:  
+
+$$
+    G(i, j) = \frac{\sum_{k=1}^p w_k \gamma_k(i, j) s_k(i, j)}{\sum_{k=1}^p w_k \gamma_k(i, j)}
+$$
+
+    où $w_k$ est un poids accordé à la variable _k_ et $\gamma_k(i, j)$ et $s_k(i,j)$ sont définies directement selon le type de la variable _k_.  
+
+    Il est fortement recommandé de standardiser les variables numériques/ordinales au préalable. Les poids _w_ et _k_ permettent de moduler l’importance de chaque variable dans la mesure de similarité.
+
+    Si on poursuit avec notre exemple, supposons que nous avons recodé les réponses de nos individus _i_ et _j_
+    de sorte que la variable 1 est numérique, la variable 2 est ordinale, les variables 3 et 4 sont des indicatrices binaires correspondant à une variable symétrique et la variable 5 est une indicatrice correspondant à une variable asymétrique. Les valeurs pour les variables 1 et 2 ont été standardisées et supposons qu’elles prennent des valeurs entre -2.5 et 2.5 (donc une étendue de 5).  
+
+    | Individu | Q1 | Q2 | Q3 | Q4 | Q5 |
+    | :- | :-: | :-: | :-: | :-: | -: |
+    | i | 1 | 2 | 0 | 1 | 0 |
+    | j | -1 | 1 | 0 | 0 | 1 |  
+
+    Supposons que nous voulons que la question 1 soit trois fois plus importante que les autres dans la mesure de similarité; il faut lui accorder un poids $w_1$ qui est trois fois plus élevé que $w_2 = w_3 = w_4 = w_5 = 1$. On a:  
+$\gamma_1(i, j) = \gamma_2(i, j) = \gamma_3(i, j) = \gamma_4(i, j) = 1$  
+$\gamma_5(i, j) = 1 - (1 - x_i5)(1 - x_j5) = 1 - (1 - 1)(1 - 0) = 1$  
+
+**Utilisation des méthodes factorielles**  
+Les techniques de réduction de la dimension vues aux chapitres précédents peuvent aussi être utilisées pour simplifier le calcul des similarités/distances entre les observations. Par exemple si on a _p_ variables numériques/ordinales et que _p_ est une très grande valeur, on peut utiliser l’analyse en composantes principales pour calculer les scores de chaque observation dans les _k_ $\ll$ _p_ axes principaux.  
+On utilise ensuite ces _k_ scores et la distance euclidienne pour calculer la distance entre les objets. Si on a plutôt _Q_ réponses à un questionnaire à choix multiples (ou plus généralement la valeur de _Q_ variables catégorielles), on peut calculer les scores de chaque observation dans les _k_ premiers axes principaux d’une analyse des correspondances multiples, ensuite encore une fois utiliser ces _k_ scores et la distance euclidienne pour calculer les distances.  
+
+Nous allons maintenant voir trois algorithmes différents s'appliquant à la Classification Non Supervisée.  
+
+### K-Means  
+La méthode des K-moyennes s'applique à des situations où les _p_ variables sont numériques/ordinales (et habituellement standardisée). L'objectif de la méthode est de partitionner les données en _K_ groupes et la valeur de _K_ est fixée. L'algorithme est relativement simple et on peut démontrer qu'à chaque étape de son exécution, la valeur de _W_(_C_) est diminuée.  
+Concrètement, voici comment fonctionne l'algorithme étape par étape:  
+1. On commence par choisir le nombre de groupes _K_ que l'on veut obtenir.  
+2. On partitionne aléatoirement les _n_ observations en _K_ groupes.  
+3. On calcule les coordonnées des centroïdes (le vecteur-moyenne) pour chacun des _K_ groupes, soit:  
+$$
+    µ_k = \frac{1}{N_k} \sum_{i:C(i) = k} x_i, k = 1, . . ., K
+$$
+
+Où $N_k$ est le nombre d'observations dans le groupe _k_.  
+4. On calcule la distance entre chaque observation et chacun des _K_ vecteurs-moyennes.  
+5. On assigne chacune des _n_ observations au groupe dont le vecteur-moyenne est le plus près.  
+6. On répète les étapes 3 à 5 jusqu'à ce qu'aucune observation ne soit réassignée à un nouveau groupe.  
+
+
 
 ### Algo 2  
 
