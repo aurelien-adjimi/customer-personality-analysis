@@ -68,9 +68,13 @@ Une mesure de distance _d_ doit satisfaire les propriétés suivantes pour tout 
 - _d_(_i_, _k_) $\leq$ _d_(_i_, _j_) + _d_(_j_, _k_).  
 
 La distance $\lambda_q$ entre deux vecteurs dans $\mathbb{R}^p$ est définie par:  
+
 $$
 ||x_i - x_j||_q = \left( \sum_{k=1}^p |x_{ik} - x_{jk}|^q \right)^{\frac{1}{q}}
 $$
+
+$ ||x_i - x_j||_q = \left( \sum_{k=1}^p |x_{ik} - x_{jk}|^q \right)^{\frac{1}{q}} $
+
 
 
 
