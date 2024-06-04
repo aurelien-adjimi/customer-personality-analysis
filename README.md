@@ -69,7 +69,7 @@ Une mesure de distance _d_ doit satisfaire les propriétés suivantes pour tout 
 
 La distance $\lambda_q$ entre deux vecteurs dans $\mathbb{R}^p$ est définie par:  
 $$
-||x_i - x_j||_q = \left( \sum_{k=1}^p |x_{ik} - x_{jk}|^q \right)^{\frac{1}{q}}
+||_x_$_i$ - _x_$_j$||$_q$ = ($\sum_{k = 1}^p$ |x$_ik$ - x$_jk$|^q)^$\frac{1}{q}$
 $$
 
 
