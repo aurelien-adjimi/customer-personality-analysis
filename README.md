@@ -142,7 +142,7 @@ Alors si la similarité entre $x_i$ et $x_j$ ici serait _s_(_i_, _j_) = 8/10 = 0
 Pour des vecteurs de variables binaires asymétriques, on assigne la modalité 1 à la valeur la plus rare (ou la plus importante) et la vameur 0 à l'autre modalité. Puis on peut utiliser l'indice de Jaccard défini par le nombre de variables pour lesquelles _i_ et _j_ prennent simultanément la valeur 1 sur le nombre de variables pour lesquelles au moins l'un de _i_ ou de _j_ n'a pas la valeur 0 soit:  
 $J(i, j) = \frac{\sum_{k=1}^p x_ik x_jk}{\sum_{k=1}^p \{1 - (1 - x_ik)(1 - x_jk)}}$.  
 
-    Dans l'exemple ci-dessus on aurait donc _J_(_i_, _j_) = 1/3 = 0.33 puisque les 7 questions pour lesquelles les deux individus donnent simultanément la valeur 0 ne sont pas comptées ni au numérateur, ni au dénominateur; pour les 3 questions qui comptent (Q1, Q6 et Q7), ils sont en accord 1 fois, d’où le 1/3.  
+Dans l'exemple ci-dessus on aurait donc _J_(_i_, _j_) = 1/3 = 0.33 puisque les 7 questions pour lesquelles les deux individus donnent simultanément la valeur 0 ne sont pas comptées ni au numérateur, ni au dénominateur; pour les 3 questions qui comptent (Q1, Q6 et Q7), ils sont en accord 1 fois, d’où le 1/3.  
 
 - *Variables nominales polytomiques*  
     Si une variable est composée de _M_ > 2 modalités, on peut la coder en utilisant _M_ - 1 variables binaires. Par exemple si les réponses possibles à une question sont Oui, Non, Je Ne Sais Pas, on pourrait coder les trois réponses possible ainsi:  
@@ -219,7 +219,56 @@ Où $N_k$ est le nombre d'observations dans le groupe _k_.
 5. On assigne chacune des _n_ observations au groupe dont le vecteur-moyenne est le plus près.  
 6. On répète les étapes 3 à 5 jusqu'à ce qu'aucune observation ne soit réassignée à un nouveau groupe.  
 
+**Exemple d'utilisation de K-Means**  
+Supposons les 5 observations des variables $x_1$ et $x_2$ suivantes:  
+| i     | 1    | 2    | 3    | 4    | 5    |
+| ----  | ---  | ---  | ---  | ---  | ---  |
+| $x_{i1}$ | -1   | -0.5 | 0    | 0.5  | 1    |
+| $x_{i2}$ | -1   | 0    | 0.5  | -0.5 | 1    |  
 
+*Itération 1*  
+1. On chisit K = 2  
+2. On assigne les observations 1, 2, 5 au groupe 1. Les observations 3 et 4 sont assignées au groupe 2.  
+3. On calcule les centroïdes des groupes:  
+$\mu_1 = \frac{1}{3} \{\begin{pmatrix} -1 \\ -1 \end{pmatrix} + \begin{pmatrix} -0.5 \\ 0 \end{pmatrix} + \begin{pmatrix} 1 \\ 1 \end{pmatrix} \} = \begin{pmatrix} -1/6 \\ 0 \end{pmatrix}$  
+
+$\mu_2 = \frac{1}{2} \{\begin{pmatrix} 0 \\ 0.5 \end{pmatrix} + \begin{pmatrix} 0.5 \\ -0.5 \end{pmatrix}\} = \begin{pmatrix} 1/4 \\ 0 \end{pmatrix}$.  
+
+4. On calcule la distance entre chaque observations et chacun des _K_ centroïdes.  
+| i     | 1    | 2    | 3    | 4    | 5    |
+| ----  | ---  | ---  | ---  | ---  | ---  |
+| $d^2(i, \mu_1)$ | 1.69   | 0.11 | 0.28    | 0.69  | 2.36    |
+| $d^2(i, \mu_2)$ | 2.56   | 0.56    | 0.31  | 0.31 | 1.57    |  
+
+5. On assigne chacune des _n_ observations au groupe dont le centroïde est le plus près. Dans ce cas-ci, les observations 1,2 et 3 sont assignées au groupe 1 et les observations 4 et 5 sont assignées au groupe 2.  
+
+*Itération 2*  
+3. On calcule les centroïdes des groupes:  
+$\mu_1 = \frac{1}{3} \{\begin{pmatrix} -1 \\ -1 \end{pmatrix} + \begin{pmatrix} -0.5 \\ 0 \end{pmatrix} + \begin{pmatrix} 0 \\ 0.5 \end{pmatrix} \} = \begin{pmatrix} -1/2 \\ -1/6 \end{pmatrix}$  
+
+$\mu_2 = \frac{1}{2} \{\begin{pmatrix} 0.5 \\ -0.5 \end{pmatrix} + \begin{pmatrix} 1 \\ 1 \end{pmatrix}\} = \begin{pmatrix} 3/4 \\ 1/4 \end{pmatrix}$.  
+
+4. On calcule la distance entre chaque observations et chacun des _K_ centroïdes.  
+| i     | 1    | 2    | 3    | 4    | 5    |
+| ----  | ---  | ---  | ---  | ---  | ---  |
+| $d^2(i, \mu_1)$ | 0.94   | 0.03 | {0.69}    | 1.11  | 3.61    |
+| $d^2(i, \mu_2)$ | 4.63   | 1.63    | 0.63  | 0.63 | 0.63    |   
+
+5. On assigne chacune des _n_ observations au groupe dont le centroïde est le plus près. L’observation 3 passe du groupe 1 au groupe 2.  
+
+*Itération 3*  
+3. On calcule les centroïdes des nouveaux groupes.  
+$\mu_1 = \frac{1}{2} \{\begin{pmatrix} -1 \\ -1 \end{pmatrix} + \begin{pmatrix} -0.5 \\ 0 \end{pmatrix} \} = \begin{pmatrix} -3/4 \\ -1/2 \end{pmatrix}$  
+
+$\mu_2 = \frac{1}{3} \{\begin{pmatrix} 0 \\ 0.5 \end{pmatrix} + \begin{pmatrix} 0.5 \\ -0.5 \end{pmatrix} + \begin{pmatrix} 1 \\ 1 \} = \begin{pmatrix} 1/2 \\ 1/3 \end{pmatrix}$.  
+
+4. On calcule la distance entre chaque observation et chacun des _K_ centroïdes.  
+| i     | 1    | 2    | 3    | 4    | 5    |
+| ----  | ---  | ---  | ---  | ---  | ---  |
+| $d^2(i, \mu_1)$ | 0.31   | 0.31 | {1.56}    | 1.56  | 5.31    |
+| $d^2(i, \mu_2)$ | 4.03   | 1.11    | 0.28  | 0.69 | 0.69    |  
+
+5. On assigne chacune des _n_ observations au groupe dont le centroïde est le plus près. Toutes les observations sont déjà dans le groupe dont le centroïde est le plus près. Il n’y a aucun changement. L’algorithme est terminé.
 
 ### Algo 2  
 
