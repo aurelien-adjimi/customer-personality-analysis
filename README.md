@@ -67,14 +67,13 @@ Une mesure de distance _d_ doit satisfaire les propriétés suivantes pour tout 
 - _d_(_i_, _j_) = _d_(_j_, _i_);  
 - _d_(_i_, _k_) $\leq$ _d_(_i_, _j_) + _d_(_j_, _k_).  
 
-La distance $$\lambda_q$$ entre deux vecteurs dans $\mathbb{R}^p$ est définie par:  
-$$
-||x_i - x_j||_q = \left( \sum_{k = 1}^p |x_{ik} - x_{jk}|^q \right)^{\frac{1}{q}}
-$$
+La distance $\lambda_q$ entre deux vecteurs dans $\mathbb{R}^p$ est définie par:  
+$||x_i - x_j||_q = \left( \sum_{k = 1}^p |x_{ik} - x_{jk}|^q \right)^{\frac{1}{q}}$
+
  
 La distance euclidienne correspond au cas où q = 2.  
 
-La distance $$\lambda_q$$ n'est pas invariante à un changement d'échelle.Ce qui a des conséquences majeures pour la pratique.  
+La distance $\lambda_q$ n'est pas invariante à un changement d'échelle.Ce qui a des conséquences majeures pour la pratique.  
 Par exemple, considérons le jeu de données suivants:  
 | Poids en grammes | Taille en centimètres |
 | :- | -: |
