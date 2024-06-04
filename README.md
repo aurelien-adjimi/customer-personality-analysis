@@ -212,9 +212,7 @@ Concrètement, voici comment fonctionne l'algorithme étape par étape:
 1. On commence par choisir le nombre de groupes _K_ que l'on veut obtenir.  
 2. On partitionne aléatoirement les _n_ observations en _K_ groupes.  
 3. On calcule les coordonnées des centroïdes (le vecteur-moyenne) pour chacun des _K_ groupes, soit:  
-$$
-\mu_k = \frac{1}{N_k} \sum_{i:C(i) = k} x_i, \quad k = 1, \ldots, K
-$$
+$\mu_k = \frac{1}{N_k} \sum_{i:C(i) = k} x_i, \quad k = 1, \ldots, K$
 
 
 Où $N_k$ est le nombre d'observations dans le groupe _k_.  
