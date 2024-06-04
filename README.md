@@ -134,10 +134,11 @@ L'indice de similarité dépend du ou des types de variables utilisées dans l'a
     Pour des vecteurs de variables binaires symétriques, on utilise la proportion d’accords (matching coefficient) dans les éléments des vecteurs. On commence par coder l’une modalité à 0 et l’autre à 1. Si on mesure _p_ variables binaires pour chacun de deux individus _i_ et _j_, on compte le nombre de variables pour lesquelles ces deux individus ont la même valeur pour une même variable, soit:  
     _m_ = $\sum_{k=1}^p I(x_ik = x_jk)$ et la similarité est définie par _s_(_i_, _j_) = _m_ / _p_. Par exemple supposons que deux individus remplissent un questionnaire de 10 questions et que la valeur 1 représente une réponse _OUI_ et 0 représent une réponse _NON_  
 
-    | Individu | Q1 | Q2 | Q3 | Q4 | Q5 | Q6 | Q7 | Q8 | Q9 | Q10 |
-    | :- | :-: | :-: | :-: |:-: | :-: | :-: | :-: | :-: | -: |
-    | i | 1 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 0 |
-    | j | 1 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 |  
+| Individu | Q1 | Q2 | Q3 | Q4 | Q5 | Q6 | Q7 | Q8 | Q9 | Q10 |
+| -------- | -- | -- | -- | -- | -- | -- | -- | -- | -- | --- |
+| i        | 1  | 0  | 0  | 0  | 0  | 1  | 0  | 0  | 0  | 0   |
+| j        | 1  | 0  | 0  | 0  | 0  | 0  | 1  | 0  | 0  | 0   |
+
 
     Alors si la similarité entre $x_i$ et $x_j$ ici serait _s_(_i_, _j_) = 8/10 = 0.8, puisqu'ils ont donné la même réponse pour 8 des 10 questions.  
     Pour des vecteurs de variables binaires asymétriques, on assigne la modalité 1 à la valeur la plus rare (ou la plus importante) et la vameur 0 à l'autre modalité. Puis on peut utiliser l'indice de Jaccard défini par le nombre de variables pour lesquelles _i_ et _j_ prennent simultanément la valeur 1 sur le nombre de variables pour lesquelles au moins l'un de _i_ ou de _j_ n'a pas la valeur 0 soit:  
@@ -173,28 +174,29 @@ L'indice de similarité dépend du ou des types de variables utilisées dans l'a
     Il n’y a pas de règle sur les scores numériques à donner, à part qu’ils doivent être positifs et refléter l’ordre des modalités. Par exemple pour une question sur le revenu, on pourrait accorder respectivement des scores de 1, 2, 3 pour des revenus faible, moyen, élevé, ou on pourrait aussi accorder 15000, 50000, 150000; c’est un exercice de jugement et il n’existe pas de règle mathématique claire.
 
 *Observation constituée de plusieurs types de variables*  
-    Que doit-on faire si chaque observation est constituée de variables de plusieurs types, par exemple si pour chacun des  
-    n individus nous mesurons l’âge (numérique), le sexe (nominale symétrique), s’il est porteur d’une mutation génétique rare (nominale asymétrique) et son niveau d’accord avec une certaine politique (ordinale)? Il existe quelques façons de procéder, mais la plus commune semble être de mesurer la similarité de Gower.
+Que doit-on faire si chaque observation est constituée de variables de plusieurs types, par exemple si pour chacun des  
+n individus nous mesurons l’âge (numérique), le sexe (nominale symétrique), s’il est porteur d’une mutation génétique rare (nominale asymétrique) et son niveau d’accord avec une certaine politique (ordinale)? Il existe quelques façons de procéder, mais la plus commune semble être de mesurer la similarité de Gower.
 
-    On doit tout d’abord recoder toute variable nominale sous forme de variables binaires et toute variable ordinale sous forme de variable numérique et supposons qu’une fois cette opération effectuée, on obtient p variables par individu. La similarité de Gower entre _x_$_i$ et _x_$_j$ est définie ainsi:  
+On doit tout d'abord recoder toute variable nominale sous forme de variables binaires et toute variable ordinale sous forme de variable numérique et supposons qu'une fois cette opération éffectuée, on obtient _p_ variables par individu. La similarité de Gower entre $x_i$ et $x_j$ est définie ainsi:  
 
 $$
     G(i, j) = \frac{\sum_{k=1}^p w_k \gamma_k(i, j) s_k(i, j)}{\sum_{k=1}^p w_k \gamma_k(i, j)}
 $$
 
-    où $w_k$ est un poids accordé à la variable _k_ et $\gamma_k(i, j)$ et $s_k(i,j)$ sont définies directement selon le type de la variable _k_.  
+où $w_k$ est un poids accordé à la variable _k_ et $\gamma_k(i, j)$ et $s_k(i,j)$ sont définies directement selon le type de la variable _k_.  
 
-    Il est fortement recommandé de standardiser les variables numériques/ordinales au préalable. Les poids _w_ et _k_ permettent de moduler l’importance de chaque variable dans la mesure de similarité.
+Il est fortement recommandé de standardiser les variables numériques/ordinales au préalable. Les poids _w_ et _k_ permettent de moduler l’importance de chaque variable dans la mesure de similarité.
 
-    Si on poursuit avec notre exemple, supposons que nous avons recodé les réponses de nos individus _i_ et _j_
-    de sorte que la variable 1 est numérique, la variable 2 est ordinale, les variables 3 et 4 sont des indicatrices binaires correspondant à une variable symétrique et la variable 5 est une indicatrice correspondant à une variable asymétrique. Les valeurs pour les variables 1 et 2 ont été standardisées et supposons qu’elles prennent des valeurs entre -2.5 et 2.5 (donc une étendue de 5).  
+Si on poursuit avec notre exemple, supposons que nous avons recodé les réponses de nos individus _i_ et _j_
+de sorte que la variable 1 est numérique, la variable 2 est ordinale, les variables 3 et 4 sont des indicatrices binaires correspondant à une variable symétrique et la variable 5 est une indicatrice correspondant à une variable asymétrique. Les valeurs pour les variables 1 et 2 ont été standardisées et supposons qu’elles prennent des valeurs entre -2.5 et 2.5 (donc une étendue de 5).  
 
-    | Individu | Q1 | Q2 | Q3 | Q4 | Q5 |
-    | :- | :-: | :-: | :-: | :-: | -: |
-    | i | 1 | 2 | 0 | 1 | 0 |
-    | j | -1 | 1 | 0 | 0 | 1 |  
+| Individu | Q1 | Q2 | Q3 | Q4 | Q5 |
+| -------- | -- | -- | -- | -- | -- |
+| i        | 1  | 2  | 0  | 1  | 0  |
+| j        | -1 | 1  | 0  | 0  | 1  |
+ 
 
-    Supposons que nous voulons que la question 1 soit trois fois plus importante que les autres dans la mesure de similarité; il faut lui accorder un poids $w_1$ qui est trois fois plus élevé que $w_2 = w_3 = w_4 = w_5 = 1$. On a:  
+Supposons que nous voulons que la question 1 soit trois fois plus importante que les autres dans la mesure de similarité; il faut lui accorder un poids $w_1$ qui est trois fois plus élevé que $w_2 = w_3 = w_4 = w_5 = 1$. On a:  
 $\gamma_1(i, j) = \gamma_2(i, j) = \gamma_3(i, j) = \gamma_4(i, j) = 1$  
 $\gamma_5(i, j) = 1 - (1 - x_i5)(1 - x_j5) = 1 - (1 - 1)(1 - 0) = 1$  
 
@@ -211,8 +213,9 @@ Concrètement, voici comment fonctionne l'algorithme étape par étape:
 2. On partitionne aléatoirement les _n_ observations en _K_ groupes.  
 3. On calcule les coordonnées des centroïdes (le vecteur-moyenne) pour chacun des _K_ groupes, soit:  
 $$
-    µ_k = \frac{1}{N_k} \sum_{i:C(i) = k} x_i, k = 1, . . ., K
+\mu_k = \frac{1}{N_k} \sum_{i:C(i) = k} x_i, \quad k = 1, \ldots, K
 $$
+
 
 Où $N_k$ est le nombre d'observations dans le groupe _k_.  
 4. On calcule la distance entre chaque observation et chacun des _K_ vecteurs-moyennes.  
