@@ -69,9 +69,7 @@ Une mesure de distance _d_ doit satisfaire les propriétés suivantes pour tout 
 
 La distance $\lambda_q$ entre deux vecteurs dans $\mathbb{R}^p$ est définie par:  
 
-$$
-||x_i - x_j||_q = \left( \sum_{k=1}^p |x_{ik} - x_{jk}|^q \right)^{\frac{1}{q}}
-$$
+$||x_i - x_j||_q = \left( \sum_{k=1}^p |x_{ik} - x_{jk}|^q \right)^{\frac{1}{q}}$
 
  
 La distance euclidienne correspond au cas où q = 2.  
@@ -216,6 +214,7 @@ $\mu_k = \frac{1}{N_k} \sum_{i:C(i) = k} x_i, \quad k = 1, \ldots, K$
 
 
 Où $N_k$ est le nombre d'observations dans le groupe _k_.  
+
 4. On calcule la distance entre chaque observation et chacun des _K_ vecteurs-moyennes.  
 5. On assigne chacune des _n_ observations au groupe dont le vecteur-moyenne est le plus près.  
 6. On répète les étapes 3 à 5 jusqu'à ce qu'aucune observation ne soit réassignée à un nouveau groupe.  
