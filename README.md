@@ -230,7 +230,9 @@ Supposons les 5 observations des variables $x_1$ et $x_2$ suivantes:
 1. On chisit K = 2  
 2. On assigne les observations 1, 2, 5 au groupe 1. Les observations 3 et 4 sont assignées au groupe 2.  
 3. On calcule les centroïdes des groupes:  
-$\mu_1 = \frac{1}{3} \{\begin{pmatrix} -1 \\ -1 \end{pmatrix} + \begin{pmatrix} -0.5 \\ 0 \end{pmatrix} + \begin{pmatrix} 1 \\ 1 \end{pmatrix} \} = \begin{pmatrix} -1/6 \\ 0 \end{pmatrix}$  
+$$
+\mu_1 = \frac{1}{3} \{\begin{pmatrix} -1 \\ -1 \end{pmatrix} + \begin{pmatrix} -0.5 \\ 0 \end{pmatrix} + \begin{pmatrix} 1 \\ 1 \end{pmatrix} \} = \begin{pmatrix} -1/6 \\ 0 \end{pmatrix}
+$$  
 
 $\mu_2 = \frac{1}{2} \{\begin{pmatrix} 0 \\ 0.5 \end{pmatrix} + \begin{pmatrix} 0.5 \\ -0.5 \end{pmatrix}\} = \begin{pmatrix} 1/4 \\ 0 \end{pmatrix}$.  
 
