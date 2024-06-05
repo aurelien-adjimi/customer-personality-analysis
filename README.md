@@ -272,9 +272,125 @@ $\mu_2 = \frac{1}{3} \{\begin{pmatrix} 0 \\ 0.5 \end{pmatrix} + \begin{pmatrix} 
 
 5. On assigne chacune des _n_ observations au groupe dont le centroïde est le plus près. Toutes les observations sont déjà dans le groupe dont le centroïde est le plus près. Il n’y a aucun changement. L’algorithme est terminé.
 
-### Algo 2  
+### Classification Hiérarchique  
+Si on ne sait pas quelle valeur de _K_ utiliser ou si les observations ne sont pas constituées de variables numériques ou ordinales, la méthode des k-moyennes ne s’applique pas (il faut une distance en bonne et due forme pour que les assignations aux groupes via les distances à un vecteur-moyenne aient du sens). On peut alors utiliser un des nombreux algorithmes de classification hiérarchique. La classification hiérarchique permet d’obtenir des partitions tout imbriquées les unes dans les autres. Il existe deux types d’algorithmes pour effectuer de la classification hiérarchique:  
+- Les algorithmes ascendants
+- Les algorithmes descendants  
 
-### Algo 3  
+L’exécution d’un tel algorithme ne donne pas une seule partition, mais _n_ partitions: une partition avec un groupe, une partition avec deux groupes, …, une partition avec _n_ groupes. Nous verrons plus tard comment résumer de façon visuelle le résultat d’une classification hiérarchique à l’aide d’un graphique en forme d’arbre appelé dendogramme. Nous verrons aussi des critères qui peuvent aider à choisir l’une parmi les _n_ partitions proposées par l’algorithme.
+
+Un algorithme descendant fonctionne ainsi:  
+- au départ toutes les observations sont dans un seul et même groupe de _n_ observations;  
+- à chaque étape, on divise le groupe le moins homogène en deux groupes;  
+- à la fin, après chaque _n_ étapes, chaque observation est son propre groupe, c'est-à-dire qu'on obtient _n_ groupes contenant une seule observation.  
+
+Un algorithme ascendant fonctionne à l'inverse:  
+- au départ chaque observation est son propre groupe, c'est-à-dire qu'on démarre avec _n_ groupes contenant chacun une seule observation;  
+- à chaque étape, on fusionne les deux groupes les plus similaires;  
+- à la fin des _n_ étapes, on obtient un seul groupe contenant toutes les _n_ observations.  
+
+Comme les algorithmes descendants demandent beaucoup de temps de calcul (ce n’est pas tout de déterminer quel groupe scinder en 2, mais on doit déterminer comment ce découpage doit se faire) et qu’ils sont peu utilisés en pratique, nous nous concentrerons sur les algorithmes ascendants.  
+
+**Algorithmes ascendants**  
+Les implémentations de la classification hiérarchique se distinguent de deux manières:  
+- leur façon de mesurer les distances ou les similarités entre deux observations;  
+- leur façon de mesurer les distances ou les similarités entre deux groupes.  
+
+Pour réaliser les algorithmes mentionnés précedemment, on doit définir _d_(_A_, _B_), la distance entre deux groupes d'observations _A_ et _B_ tels que:  
+- les groupes _A_ et _B_ sont des sous-ensembles des observations du jeu de données;  
+- l'intersection entre les groupes _A_ et _B_ est l'ensemble vide.  
+
+Nous avons vu toutes sortes de méthodes pour calculer la distance entre une paire d’observations, mais nous devons maintenant considérer des méthodes pour calculer la distance entre une paire de groupes d’observations. Il existe plusieurs façons de calculer une telle distance entre deux groupes lors de l’exécution d’une classification hiérarchique ascendante. Voici une petite liste explicative de certaines d'entre elles:  
+
+*Méthode du plus proche voisin (single linkage)*  
+La distance entre deux groupes se définit comme suit pour cette méthode:  
+_d_(_A_, _B_) = min $ \{ d_ij : i \in A, j \in B \}$.  
+
+Si on travaille avec des indices de similarité alors on pose:  
+_s_(_A_, _B_) = max $\{ s_ij : i \in A, j \in B \}$.  
+
+On voit donc d’où la méthode tire son nom: la distance/similarité entre deux groupes d’observations est tout simplement la distance/similarité entre les points de chaque groupe qui sont les plus rapprochés/similaires.  
+
+*Méthode du voisin le plus distant (complete linkage)*  
+La distance entre deux groupes se définit comme suit pour cette méthode:  
+_d_(_A_, _B_) = max $\{ d_ij : i \in A, j \in B \}$.  
+
+Si on travaille avec les indices de similarité alors on aura:  
+_s_(_A_, _B_) = min $\{ s_ij : i \in A, j \in B \}$.  
+
+Encore une fois comme le nom l’indique, la distance/similarité entre deux groupes d’observations est tout simplement la distance/similarité entre les points de chaque groupe qui sont les plus éloignés/dissimilaires.  
+
+Cette méthode est peu utilisée en pratique.  
+
+*Méthode de la moyenne (average linkage)*  
+La distance entre deux groupes se définit comme suit pour cette méthode:  
+_d_(_A_, _B_) = $\frac{1}{n_a n_b} \sum_{i}\in A \sum_{j}\in B d(x_i, x_j)$,  
+
+où $n_a$ est le nombre d'observations dans le groupe A et $n_b$ est le nombre d'observations dans le groupe B.  
+
+On doit donc calculer $n_a x n_b$ distances possibles entre les points des deux groupes, en suite on prend la moyenne de ces distances comme étant celle qui sépare les deux groupes.  
+
+La méthode de la moyenne forme des groupes de faibles variance et de même variance.  
+
+*La méthode du centroïde*  
+La distance entre deux groupes se définit comme suit pour cette méthode:  
+_d_(_A_, _B_) = $d(\bar{x_A}, \bar{x_B})$,  
+
+où  
+
+$\bar{x_A} = \frac{1}{n_A} \sum_{i \in A} x_i, \bar{x_B} = \frac{1}{n_B} \sum_{j \in B} x_j$.  
+
+La moyenne $\bar{x_AB}$ du nouveau groupe résultant de la fusion des groupes A et B se calcule comme suit:  
+$\bar{x_AB} = \frac{n_A \bar{x_A} + n_B \bar{x_B}}{n_A + n_B}$.  
+
+
+*Méthode de la médiane*  
+A une étape donnée, nous avons toujours à notre disposition la distance entre les groupes déjà formés. On fusionne les deux groupes les plus similaires, dison _A_ et _B_ pour obtenir un groupe _AB_. Avec la méthode de la médiane, la distance entre le nouveau groupe _AB_ et tout autre groupe _C_ est définit par:  
+
+_d_(_AB_, _C_) = $\frac {d(A, C) + d(B, C)}{2} - d(A, B) / 4$.  
+
+
+
+
+### DBSCAN (Density-Based Spatial Clustering of Applications with Noise)  
+Etant donnés des points et un entier _k_, l'algorithme vise à diviser les points en _k_ groupes appelés clusters, homogènes et compacts.  
+
+le DBSCAN est un algorithme simple qui définit des clusters en utilisant l'estimation de la densité locale. On peut le diviser en 4 étapes:  
+- Pour chaque observation on regarde le nombre de points à au plus une distance $\varepsilon$ de celle-ci. On appelle cette zone le $\varepsilon$-voisinage de l'observation.  
+- Si une observation compte au moins un certain nombre de voisins y compris elle-même, elle est considérée comme une observation cœur. On a alors décelé une observation à haute densité.  
+- Toutes les observations au voisinage d’une observation cœur appartiennent au même cluster. Il peut y avoir des observations cœur proche les unes des autres. Par conséquent de proche en proche on obtient une longue séquence d’observations cœur qui constitue un unique cluster.  
+- Toute observation qui n’est pas une observation cœur et qui ne comporte pas d’observation cœur dans son voisinage est considérée comme une anomalie.  
+
+On a donc besoin de définir deux informations avant d'utiliser le DBSCAN:  
+- Quelle distance $\varepsilon$ pour déterminer pour chaque observation le $\varepsilon$-voisinage ?  
+- Quel est le nombre minimal de voisin nécessaire pour considérer qu'une observation est une observation coeur ?  
+
+Ces deux informations sont renseignées librement par l'utilisateur. Contrairement à l'algorithme des k-means ou la classification ascendante hiérarchique, il n'y a pas besoin de définir en amont le nombre de clusters ce qui rend l'algorithme moins rigide.  
+
+*Notion de distance et choix du $\varepsilon$*  
+Dans cet algorithme il y a deux points clés:  
+- Quelle est la métrique utilisée pour évaluer la distance entre une observation et ses voisins ?  
+- Quel est le $\varepsilon$ idéal ?  
+
+Avec le DBSCAN on utilise généralement la distance euclidienne, soit p = ($p_1$, . . ., $p_n$) et q = ($q_1$, . . ., $q_n$):  
+
+_d_(p, q) = $\sqrt{(p_1 - q_1)² + (p_2 - q_2)² + . . . + (p_i - q_i)² + . . . + (p_n - q_n)²} = \sqrt{\sum_{i = 1}^n (p_i - q_i)²}$.  
+
+A chaque observation, pour compter le nombre de voisin à au plus une distance $\varepsilon$, on calcule la distance euclidienne entre le voisin et l'observation et on vérifie si c'est inférieur à $\varepsilon$.  
+
+Reste maintenant à savoir comment choisir le bon epsilon. Supposons que dans notre exemple nous choisissons de tester l’algorithme avec des valeurs différentes de $\varepsilon$ . Voici le résultat :  
+![Résultat](./assets/dbscan.png "Résultat DBSCAN").  
+
+Dans les trois exemples le nombre de voisins minimal est toujours fixé à 5.  
+
+Si $\varepsilon$ est trop petit le $\varepsilon$-voisinage est trop faible et toutes les observations du jeu de données sont considérées comme des anomalies.  
+
+C’est le cas de la figure de gauche eps = 0.05. 
+
+A contrario si $\varepsilon$ est trop grand chaque observation contient dans son $\varepsilon$-voisinage toutes les autres observations du jeu de données. Par conséquent nous n’obtenons qu’un unique cluster. Il est donc très important de bien calibrer le ε pour obtenir un partitionnement de qualité.  
+
+Une méthode simple pour optimiser le $\varepsilon$ consiste à regarder pour chaque observation à quelle distance se situe son voisin le plus proche. Ensuite il suffit de fixer un $\varepsilon$ tel qu’une part « suffisamment grande » des observations aient une distance à son plus proche voisin inférieure à $\varepsilon$. Par « suffisamment grande » on entend 90-95% des observations qui doivent avoir au moins un voisin dans leur $\varepsilon$-voisinage.
+
 
 ## Les Clusters  
 
