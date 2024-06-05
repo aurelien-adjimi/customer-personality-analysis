@@ -1,0 +1,2 @@
+# Pour exclure les dossiers d'environnements virtuels
+/client-analysis-env 
