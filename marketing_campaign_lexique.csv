@@ -1,0 +1,28 @@
+ID Client	Identifiant unique du client
+Year_Birth	Année de naissance du client
+Education	Niveau d'éducation du client
+Marital_Status	Etat civil du client
+Income	Revenu annuel du foyer du client
+Kidhome	Nombre d'enfants dans le foyer du client
+Teenhome	Nombre d'adolescents dans le foyer du client
+Dt_Customer	Date d'inscription du client auprès de l'entreprise
+Recency	Nombre de jours écoulés depuis le dernier achat du client
+Complain	1 si le client s'est plaint au cours des 2 dernières années, 0 sinon
+MntWines	Montant dépensé en vins au cours des 2 dernières années
+MntFruits	Montant dépensé en fruits au cours des 2 dernières années
+MntMeatProducts	Montant dépensé en viande au cours des 2 dernières années
+MntFishProducts	Montant dépensé en poisson au cours des 2 dernières années
+MntSweetProducts	Montant dépensé en sucreries au cours des 2 dernières années
+MntGoldProds	Montant dépensé en or au cours des 2 dernières années
+English Column Name	French Description
+NumDealsPurchases	Nombre d'achats effectués avec une remise
+AcceptedCmp1	1 si le client a accepté la 1ère offre de campagne, 0 sinon
+AcceptedCmp2	1 si le client a accepté la 2ème offre de campagne, 0 sinon
+AcceptedCmp3	1 si le client a accepté la 3ème offre de campagne, 0 sinon
+AcceptedCmp4	1 si le client a accepté la 4ème offre de campagne, 0 sinon
+AcceptedCmp5	1 si le client a accepté la 5ème offre de campagne, 0 sinon
+Response	1 si le client a accepté l'offre de la dernière campagne, 0 sinon
+NumWebPurchases	Nombre d'achats effectués sur le site web de l'entreprise
+NumCatalogPurchases	Nombre d'achats effectués via un catalogue
+NumStorePurchases	Nombre d'achats effectués directement en magasin
+NumWebVisitsMonth	Nombre de visites sur le site web de l'entreprise au cours du dernier mois
