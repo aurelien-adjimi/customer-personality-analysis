@@ -393,12 +393,105 @@ Une méthode simple pour optimiser le $\varepsilon$ consiste à regarder pour ch
 
 
 ## Les Clusters  
+Dans le domaine de l'apprentissage non supervisé, une des principales étapes consiste à déterminer le nombre optimal de clusters et à évaluer la qualité des clusters obtenus. Les algorithmes de clustering, tels que K-means, nécessitent la spécification du nombre de clusters à l'avance, ce qui pose la question cruciale : comment choisir ce nombre de manière objective et justifiée ? De plus, une fois les clusters formés, il est essentiel de mesurer leur qualité pour s'assurer que les données ont été correctement partitionnées.
+
+La sélection du nombre optimal de clusters est une tâche essentielle, car elle peut grandement influencer les résultats et les interprétations des analyses de clustering. Plusieurs méthodes ont été développées pour aider à cette sélection, chacune avec ses propres avantages et inconvénients. Parmi ces méthodes, la méthode du coude (Elbow Method), la méthode de la silhouette (Silhouette Method) et les critères d'information comme le BIC (Bayesian Information Criterion) et l'AIC (Akaike Information Criterion) sont les plus couramment utilisées.
+
+Parallèlement, mesurer la qualité d’un cluster permet de valider et de comparer les résultats de différents algorithmes ou de différents paramètres. Les mesures de qualité de clusters peuvent se baser sur la cohésion intra-cluster, la séparation inter-cluster, ou des indices combinant ces deux aspects, comme le score de silhouette.
+
+Nous allons donc voir les quatre méthodes de sélection énoncée ci-dessus puis apprendre comment on peut mesurer la qualité d'un cluster.  
 
 ### Méthodes de sélection du nombre optimal de clusters  
+*Méthode du Coude*  
+La méthode du coude se base sur le fait que la somme de la variance intraclusters peut être réduite grâce à l'augmentation du nombre de clusters. Plus il est élevé, plus il permet d'extraire des groupes plus fins à partir de l'analyse d'objets de données qui ont plus de similarité entre eux. On utilise le point de retournement de la courbe de la somme des variances pour choisir le bon nombre de clusters.
+
+Voici comment fonctionne cette méthode:  
+1. Exécution de l'algorithme de clustering pour un intervalle de valeurs de _K_ (par exemple, _K_ de 1 à 10).  
+2. Calcul de l'inertie pour chaque valeur de _K_.  
+3. Traçage de l'inertie en fonction de _K_.  
+4. Identification du point de coude dans la courbe.  
+
+*Méthode de la silhouhette*  
+La méthode de la silhouette est une mesure de la qualité d'un clustering, qui évalue à la fois la cohésion intra-cluster et la séparation inter-cluster. Elle fournit une indication de la compacité des clusters ainsi que de leur séparation les uns par rapport aux autres. La silhouette est souvent utilisée pour déterminer le nombre optimal de clusters dans un ensemble de données.  
+La silhouette pour un point de données mesure à quel point ce point est proche des autres points dans son propre cluster par rapport à la distance moyenne des points dans d'autres clusters. La silhouette est calculée pour chaque point de données et fournit une mesure globale de la qualité du clustering.  
+
+_Calcul de la silhouette pour un point de données_:  
+Pour un point de données _i_, la silhouette est calculée comme ceci:  
+1. Cohésion Intra-Cluster ($a_i$): Calcul de la distance moyenne entre le point _i_ et tous les autres points du même cluster. Cela mesure à quel point le point _i_ est proche des autres points de son propre cluster.  
+
+$a_i = \frac{1}{|C_i| - 1} \sum_{j \in C_i, j \neq i} d(i, j)$.  
+
+Où $|C_i|$ est le nombre de points dans le cluster $C_i$, et _d_(_i_, _j_) est la distance entre les points _i_ et _j_.  
+
+2. Séparation Inter-Cluster($b_i$): Pour chaque cluster différent de celui auquel appartient le point _i_ calculer la distance moyenne entre le point _i_ et tous les points de ce cluster. Sélectionner la distance moyenne minimale parmi ces clusters. Cela mesure à quel point le point _i_ est éloigné des points des autres clusters.  
+
+$b_i = min_{k\neq C_i} \frac{1}{|C_k|} \sum_{j \in C_k} d(i, j)$.  
+
+3. Silhouette ($s_i$): la silhouette pour le point _i_ est donnée par:  
+$s_i = \frac{b_i - a_i}{max(a_i , b_i)}$.  
+
+La valeur de la silhouette $s_i$ est comprise entre -1 et 1. Une valeur élevée de la silhouette indique que le point est bien classé, avec une cohésion intra-cluster élevée et une séparation inter-cluster élevée. Une valeur proche de 0 indique que le point est proche de la frontière entre deux clusters, tandis qu'une valeur négative indique que le point pourrait être mal classé.  
+
+_Calcul de la silhouette moyenne_:  
+La silhouette moyenne fournit une mesure globale de la qualité du clustering. Plus la silhouette moyenne est proche de 1, meilleure est la partition des clusters. Une valeur négative ou proche de zéro indique généralement une mauvaise séparation des clusters.  
+
+*Bayesian Information Criterion (BIC)*  
+Le critère d'information bayésien (BIC) est une mesure utilisée pour comparer différents modèles statistiques. Il est dérivé de la théorie de l'information et de l'approche bayésienne de l'inférence statistique. Le BIC est largement utilisé dans le contexte du clustering pour sélectionner le nombre optimal de clusters. Voici la formule d'utilisation:   
+
+$BIC = k\log(N) - 2\log(L)$.  
+
+Où:  
+N est le nombre total d'observations dans l'ensemble de données.  
+k est le nombre total de paramètres estimés dans le modèle, y compris les paramètres des clusters ainsi que les paramètres de variance.  
+L est la fonction de vraisemblance maximale du modèle, qui mesure la probabilité des données observées sous le modèle.  
+
+Le BIC favorise les modèles qui ajustent bien les données tout en étant parcimonieux en termes de nombre de paramètres. Plus le BIC est bas, meilleure est la qualité du modèle. Lors de la comparaison de plusieurs modèles de clustering avec des nombres de clusters différents, le modèle avec le BIC le plus bas est généralement choisi comme le meilleur modèle.  
+
+*Akaike Information Criterion (AIC)*:  
+Le critère d'information d'Akaike (AIC) est une autre mesure utilisée pour comparer la qualité de différents modèles statistiques. Il est similaire au BIC mais utilise une pénalité moins forte pour le nombre de paramètres du modèle. Comme le BIC, l'AIC est largement utilisé dans le contexte du clustering pour sélectionner le nombre optimal de clusters.  Voici la formule d'utilisation:  
+
+$AIC = 2k - 2\log(L)$.  
+
+Où _k_ et _L_ sont définis de la même manière que pour le BIC.  
+
+Comme le BIC, l'AIC favorise les modèles qui ajustent bien les données tout en étant parcimonieux en termes de nombre de paramètres. Cependant, l'AIC peut être plus indulgent envers les modèles avec un nombre de paramètres plus élevé que le BIC. De même, lors de la comparaison de plusieurs modèles de clustering, le modèle avec le plus petit AIC est généralement considéré comme le meilleur. 
 
 ### Mesure de qualité d'un cluster  
+La mesure de qualité d'un cluster est essentielle pour évaluer la pertinence et l'efficacité d'un algorithme de clustering dans la segmentation des données en groupes homogènes. Il existe plusieurs mesures de qualité qui peuvent être utilisées pour évaluer la cohérence et la séparation des clusters. Les mesures de qualité de clustering sont généralement divisées en deux catégories principales:  
 
+1. Cohésion Intra-Cluster 
+La cohésion intra-cluster évalue à quel point les membres d'un cluster sont similaires entre eux. Une cohésion élevée indique que les points dans le même cluster sont étroitement liés les uns aux autres.  
 
+Parmi les différentes mesures on retrouve par exemple l'inertie:  
+L'inertie est une mesure clé utilisée pour évaluer la qualité du clustering. Elle représente la somme des distances au carré entre chaque point de données et le centroïde de son cluster. Plus formellement, l'inertie est définie comme suit:  
 
+$Inertie = \sum_{k=1}^K \sum_{i \in C_k} ||x_i - µ_k||²$.  
+
+Où  
+
+_K_ est le nombre de clusters.  
+$C_k$ est le k-ième cluster.  
+$x_i$ est un point de données appartenant au cluster $C_k$.  
+$µ_k$ est le centroïde de $C_k$.  
+$||x_i -µ_k||²$ est la distance au carré entre le point $x_i$ et le centroïde $µ_k$.  
+
+L'inertie mesure donc la cohésion interne des clusters, c'est-à-dire la compacité des clusters formés. Un faible niveau d'inertie indique que les points sont proches de leurs centroïdes respectifs, ce qui suggère des clusters denses et bien définis.  
+
+2. Séparation Inter-Cluster  
+La séparation inter-cluster évalue à quel point les clusters sont distincts les uns des autres. Une séparation élevée indique que les clusters sont bien séparés et distincts les uns des autres.  
+
+Parmi les différentes mesures on retrouve par exemple la mesure de Davies Bouldin:  
+L'indice de Davies-Bouldin est une mesure de qualité utilisée pour évaluer la qualité d'un clustering en prenant en compte à la fois la cohésion intra-cluster et la séparation inter-cluster. Contrairement à d'autres mesures, comme l'inertie ou la silhouette, qui se concentrent sur un aspect spécifique du clustering, l'indice de Davies-Bouldin tente de fournir une mesure globale de la qualité en considérant à la fois la compacité des clusters et leur séparation.
+L'indice de Davies-Bouldin pour un ensemble de clusters est défini comme la moyenne des indices de similarité de chaque cluster par rapport aux autres clusters. La formule générale pour calculer l'indice de Davies-Bouldin est la suivante:  
+
+$DB = \frac{1}{K} \sum_{i=1}^K max_{j \neq i}(\frac{cohésion(i) + cohésion(j)}{séparation(i,j)})$.  
+
+Où  
+
+_K_ est le nombre de clusters.  
+cohésion(i) est une mesure de la cohésion intra-cluster du cluster _i_ par exemple la dispersion moyenne des points par rapport à leur centroïde.  
+séparation(i,j) est une mesure de la séparation inter-cluster entre les clusters _i_ et _j_ par exemple la distance entre leurs centroïdes.  
+
+Un indice de Davies-Bouldin faible indique une meilleure séparation entre les clusters et une meilleure compacité intra-cluster. En d'autres termes, des valeurs faibles de l'indice de Davies-Bouldin indiquent un meilleur clustering, où les clusters sont bien séparés les uns des autres et où les points à l'intérieur de chaque cluster sont proches les uns des autres.
 
 ## Conclusion
